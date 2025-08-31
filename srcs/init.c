@@ -6,7 +6,7 @@
 /*   By: iaktas <iaktas@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:15:00 by iaktas            #+#    #+#             */
-/*   Updated: 2025/08/30 20:54:58 by iaktas           ###   ########.fr       */
+/*   Updated: 2025/08/31 18:15:23 by iaktas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,18 @@ int init_guard(t_guard *guard, t_law *prison_law)
     guard->start_time = 0;
     guard->law = prison_law;
     guard->forks = malloc(sizeof(pthread_mutex_t) * guard->law->philo_count);
-    if (!guard->forks)
+    guard->can_i_eat = malloc(sizeof(pthread_mutex_t) * guard->law->philo_count);
+    if (!guard->forks || !guard->can_i_eat)
         return (1);
     for (i = 0; i < guard->law->philo_count; i++)
     {
         if (pthread_mutex_init(&guard->forks[i], NULL))
             return (1);
+        if (pthread_mutex_init(&guard->can_i_eat[i], NULL))
+            return (1);
     }
     if (pthread_mutex_init(&guard->is_die_mutex, NULL))
         return (1);
-    
     return (0);
 }
 
@@ -67,6 +69,7 @@ int init_philos(t_philo **philos, t_law *law, t_guard *guard)
         (*philos)[i].right_fork = (i + 1) % law->philo_count;
         (*philos)[i].last_meal_time = 0;
         (*philos)[i].meals_eaten = 0;
+        (*philos)[i].am_i_alive = 1;
         (*philos)[i].ask_guard = guard;
     }
     

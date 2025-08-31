@@ -6,7 +6,7 @@
 /*   By: iaktas <iaktas@student.42istanbul.com.t    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 13:45:19 by iaktas            #+#    #+#             */
-/*   Updated: 2025/08/30 21:43:22 by iaktas           ###   ########.fr       */
+/*   Updated: 2025/08/31 20:49:31 by iaktas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,14 @@ void *philosopher_routine(void *arg);
 int philo_eat(t_philo *philo);
 void philo_sleep(t_philo *philo);
 void philo_think(t_philo *philo);
-int check_starvation(t_philo *philo);
-int start_simulation(t_prison *prison);
+
 size_t get_time(void);
 void print_message(t_philo *philo, char *msg, int id, int die);
 void precise_sleep(t_philo *philo, int sleep_time);
 void safe_sleep(int microseconds);
+
+// prison_sim.c
+int start_simulation(t_prison *prison);
 
 struct s_philo
 {
@@ -73,14 +75,19 @@ struct s_philo
 	int				left_fork;
 	int				right_fork;
 	size_t			last_meal_time;
+
+	int				can_i_eat;
 	int				meals_eaten;
+	int				am_i_alive;
+	pthread_mutex_t	am_i_alive_mutex;
+	
 	struct s_guard	*ask_guard;
 };
 
 struct s_guard
 {
 	int				someone_died;
-	pthread_mutex_t	is_die_mutex;
+	pthread_mutex_t	someone_died_mutex;
 	size_t			start_time;
 	pthread_mutex_t	*forks;
 	t_law			*law;

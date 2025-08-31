@@ -27,7 +27,10 @@ SRCS_DIR		= srcs/
 SRC_FILES		= main.c \
 				  init.c \
 				  cleanup.c \
-				  philosopher.c 
+				  philosopher.c \
+				  prison_sim.c \
+				  print.c \
+				  time.c 
 # Objects
 OBJS_DIR		= objs/
 OBJ_FILES		= $(SRC_FILES:.c=.o)
