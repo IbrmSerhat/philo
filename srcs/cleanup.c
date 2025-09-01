@@ -6,7 +6,7 @@
 /*   By: iaktas <iaktas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:00:00 by iaktas            #+#    #+#             */
-/*   Updated: 2025/09/01 13:41:45 by iaktas           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:06:36 by iaktas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,38 +15,36 @@
 
 void	clean_philos(t_philo *philos, int philo_count)
 {
-	int	i;
-
+	int i = 0;
 	if (!philos)
-		return ;
+		return;
 	while (i < philo_count)
 	{
-		if (philos[i].thread)
-			pthread_join(philos[i].thread, NULL);
+		pthread_join(philos[i].thread, NULL);
 		pthread_mutex_destroy(&philos[i].am_i_alive_mutex);
 		i++;
 	}
 	free(philos);
+	philos = NULL;
 }
 
 void	clean_guard(t_guard *guard, int philo_count)
 {
-	int	i;
-
-	if (guard)
+	int i = 0;
+	if (!guard)
+		return;
+	if (guard->forks)
 	{
-		if (guard->forks)
+		while (i < philo_count)
 		{
-			while (i < philo_count)
-			{
-				pthread_mutex_destroy(&guard->forks[i]);
-				i++;
-			}
-			free(guard->forks);
+			pthread_mutex_destroy(&guard->forks[i]);
+			i++;
 		}
-		pthread_mutex_destroy(&guard->someone_died_mutex);
-		pthread_mutex_destroy(&guard->can_i_speak);
+		free(guard->forks);
+		guard->forks = NULL;
 	}
+	pthread_mutex_destroy(&guard->someone_died_mutex);
+	pthread_mutex_destroy(&guard->can_i_speak);
 }
 
 void	clean_prison(t_prison *prison)
