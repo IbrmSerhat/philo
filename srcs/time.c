@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iaktas <iaktas@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*   By: iaktas <iaktas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 18:06:34 by iaktas            #+#    #+#             */
-/*   Updated: 2025/08/31 18:07:38 by iaktas           ###   ########.fr       */
+/*   Updated: 2025/09/01 13:33:56 by iaktas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	safe_sleep(int microseconds)
 		if (remaining < chunk_size)
 		{
 			usleep(remaining);
-			break;
+			break ;
 		}
 		usleep(chunk_size);
 		remaining -= chunk_size;

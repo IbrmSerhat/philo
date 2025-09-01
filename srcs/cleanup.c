@@ -6,37 +6,42 @@
 /*   By: iaktas <iaktas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:00:00 by iaktas            #+#    #+#             */
-/*   Updated: 2025/09/01 12:05:37 by iaktas           ###   ########.fr       */
+/*   Updated: 2025/09/01 13:41:45 by iaktas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 #include <stdlib.h>
 
-void clean_philos(t_philo *philos, int philo_count)
+void	clean_philos(t_philo *philos, int philo_count)
 {
-    int i;
-    if (!philos)
-        return;
-    for (i = 0; i < philo_count; i++)
-    {
-        // Sadece thread başlatıldıysa join et
-        if (philos[i].thread)
-            pthread_join(philos[i].thread, NULL);
-        pthread_mutex_destroy(&philos[i].am_i_alive_mutex);
-    }
-    free(philos);
+	int	i;
+
+	if (!philos)
+		return ;
+	while (i < philo_count)
+	{
+		if (philos[i].thread)
+			pthread_join(philos[i].thread, NULL);
+		pthread_mutex_destroy(&philos[i].am_i_alive_mutex);
+		i++;
+	}
+	free(philos);
 }
 
-void clean_guard(t_guard *guard, int philo_count)
+void	clean_guard(t_guard *guard, int philo_count)
 {
-	int i;
+	int	i;
+
 	if (guard)
 	{
 		if (guard->forks)
 		{
-			for (i = 0; i < philo_count; i++)
+			while (i < philo_count)
+			{
 				pthread_mutex_destroy(&guard->forks[i]);
+				i++;
+			}
 			free(guard->forks);
 		}
 		pthread_mutex_destroy(&guard->someone_died_mutex);
@@ -44,11 +49,11 @@ void clean_guard(t_guard *guard, int philo_count)
 	}
 }
 
-void clean_prison(t_prison *prison)
+void	clean_prison(t_prison *prison)
 {
-    if (prison)
-    {
-        clean_philos(prison->philos, prison->law.philo_count);
-        clean_guard(&prison->guard, prison->law.philo_count);
-    }
+	if (prison)
+	{
+		clean_philos(prison->philos, prison->law.philo_count);
+		clean_guard(&prison->guard, prison->law.philo_count);
+	}
 }
