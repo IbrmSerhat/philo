@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iaktas <iaktas@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*   By: iaktas <iaktas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 13:45:19 by iaktas            #+#    #+#             */
-/*   Updated: 2025/08/31 20:49:31 by iaktas           ###   ########.fr       */
+/*   Updated: 2025/09/01 10:24:17 by iaktas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ struct s_philo
 
 struct s_guard
 {
+	pthread_mutex_t	can_i_speak;
 	int				someone_died;
 	pthread_mutex_t	someone_died_mutex;
 	size_t			start_time;

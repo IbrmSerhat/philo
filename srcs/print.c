@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iaktas <iaktas@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*   By: iaktas <iaktas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 18:07:21 by iaktas            #+#    #+#             */
-/*   Updated: 2025/08/31 19:16:58 by iaktas           ###   ########.fr       */
+/*   Updated: 2025/09/01 13:07:43 by iaktas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,38 @@
 
 void	print_message(t_philo *philo, char *msg, int id, int am_i_alive)
 {
+	
+	
 	size_t	current_time;
 	char	*philo_color;
-    static int can_i_print; // Static her oluştuğunda 0 gelir.
+	// Başlangıçta 0, ilk ölümden sonra 1 olacak. 0: print serbest, 1: sadece ölüm mesajı basılır
+	static int print_blocked;
 
-	pthread_mutex_lock(&philo->ask_guard->is_die_mutex);
+	pthread_mutex_lock(&philo->ask_guard->can_i_speak);
 
-    if (!am_i_alive)
-    {
-        can_i_print = 0; // İlk ölümden sonra print etmeyi durdur.
-    }
-
-	if (!philo->ask_guard->someone_died || !am_i_alive)
+	// İlk ölümde print_blocked = 1 yapılır
+	if (!am_i_alive)
 	{
-		pthread_mutex_unlock(&philo->ask_guard->is_die_mutex);
+		// write(STDERR_FILENO, "++++++++++++++++++++++++++++++++\n", 33);
+		print_blocked = 1;
+	}
+
+	// Eğer print_blocked aktifse ve hala yaşayan bir filozofsa, mesaj basma
+	if (print_blocked == 1 && am_i_alive)
+	{
+		pthread_mutex_unlock(&philo->ask_guard->can_i_speak);
 		return;
 	}
+
 	current_time = get_time() - philo->ask_guard->start_time;
 
-    // Renk kodlarını tanımla
-	if (am_i_alive)
+	if (!am_i_alive)
 		philo_color = RED;
 	else
 		philo_color = COLORS[(id - 1) % 10];
-	
-    if (can_i_print)
-    {
-        printf("%s%zu %d %s%s\n", 
-		    philo_color, current_time, philo->id, msg, RESET);
-    }
-	   
-			
-	pthread_mutex_unlock(&philo->ask_guard->is_die_mutex);
+
+	if (!print_blocked)
+		printf("%s%zu %d %s%s\n", philo_color, current_time, philo->id, msg, RESET);
+
+	pthread_mutex_unlock(&philo->ask_guard->can_i_speak);
 }

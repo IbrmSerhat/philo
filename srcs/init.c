@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iaktas <iaktas@student.42istanbul.com.t    +#+  +:+       +#+        */
+/*   By: iaktas <iaktas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:15:00 by iaktas            #+#    #+#             */
-/*   Updated: 2025/08/31 18:15:23 by iaktas           ###   ########.fr       */
+/*   Updated: 2025/09/01 12:02:15 by iaktas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,25 +34,26 @@ int init_law(t_law *law, int argc, char **argv)
 
 int init_guard(t_guard *guard, t_law *prison_law)
 {
-    int i;
-    
-    guard->someone_died = 0;
-    guard->start_time = 0;
-    guard->law = prison_law;
-    guard->forks = malloc(sizeof(pthread_mutex_t) * guard->law->philo_count);
-    guard->can_i_eat = malloc(sizeof(pthread_mutex_t) * guard->law->philo_count);
-    if (!guard->forks || !guard->can_i_eat)
-        return (1);
-    for (i = 0; i < guard->law->philo_count; i++)
-    {
-        if (pthread_mutex_init(&guard->forks[i], NULL))
-            return (1);
-        if (pthread_mutex_init(&guard->can_i_eat[i], NULL))
-            return (1);
-    }
-    if (pthread_mutex_init(&guard->is_die_mutex, NULL))
-        return (1);
-    return (0);
+	int i;
+
+	guard->someone_died = 0;
+	if (pthread_mutex_init(&guard->someone_died_mutex, NULL))
+		return (1);
+	if (pthread_mutex_init(&guard->can_i_speak, NULL))
+		return (1);
+	guard->start_time = 0;
+	guard->law = prison_law;
+	guard->forks = malloc(sizeof(pthread_mutex_t) * guard->law->philo_count);
+	if (!guard->forks)
+		return (1);
+	i = 0;
+	while (i<guard->law->philo_count)
+	{
+		if (pthread_mutex_init(&guard->forks[i], NULL))
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 int init_philos(t_philo **philos, t_law *law, t_guard *guard)
@@ -71,6 +72,8 @@ int init_philos(t_philo **philos, t_law *law, t_guard *guard)
         (*philos)[i].meals_eaten = 0;
         (*philos)[i].am_i_alive = 1;
         (*philos)[i].ask_guard = guard;
+		if (pthread_mutex_init(&(*philos)[i].am_i_alive_mutex, NULL))
+			return (1);
     }
     
     return (0);

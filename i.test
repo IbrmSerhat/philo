@@ -1,3 +1,0 @@
-make re 
-clear
-valgrind --tool=helgrind ./philo 5 600 200 200
