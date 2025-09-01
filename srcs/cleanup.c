@@ -6,7 +6,7 @@
 /*   By: iaktas <iaktas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:00:00 by iaktas            #+#    #+#             */
-/*   Updated: 2025/09/01 14:06:36 by iaktas           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:38:15 by iaktas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 
 void	clean_philos(t_philo *philos, int philo_count)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	if (!philos)
-		return;
+		return ;
 	while (i < philo_count)
 	{
 		pthread_join(philos[i].thread, NULL);
@@ -30,9 +32,11 @@ void	clean_philos(t_philo *philos, int philo_count)
 
 void	clean_guard(t_guard *guard, int philo_count)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	if (!guard)
-		return;
+		return ;
 	if (guard->forks)
 	{
 		while (i < philo_count)

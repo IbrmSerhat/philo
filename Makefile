@@ -28,6 +28,7 @@ SRC_FILES		= main.c \
 				  init.c \
 				  cleanup.c \
 				  philosopher.c \
+				  philosopher_utils.c \
 				  prison_sim.c \
 				  print.c \
 				  time.c 

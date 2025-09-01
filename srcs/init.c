@@ -6,22 +6,52 @@
 /*   By: iaktas <iaktas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 20:15:00 by iaktas            #+#    #+#             */
-/*   Updated: 2025/09/01 13:59:00 by iaktas           ###   ########.fr       */
+/*   Updated: 2025/09/01 15:12:56 by iaktas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-int init_law(t_law *law, int argc, char **argv)
+static int	ft_atoi(const char *str)
+{
+	int	i;
+	int	sign;
+	int	ret;
+
+	i = 0;
+	sign = 1;
+	ret = 0;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n'
+		|| str[i] == '\r' || str[i] == '\v' || str[i] == '\f')
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+		{
+			sign *= -1;
+		}
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		ret = (str[i] - '0') + (ret * 10);
+		i++;
+	}
+	return (ret * sign);
+}
+
+int	init_law(t_law *law, int argc, char **argv)
 {
 	if (argc < 5 || argc > 6)
 		return (1);
-
-	law->philo_count = atoi(argv[1]);
-	law->time_to_die = atoi(argv[2]);
-	law->time_to_eat = atoi(argv[3]);
-	law->time_to_sleep = atoi(argv[4]);
-	law->meals_required = (argc == 6) ? atoi(argv[5]) : -1;
+	law->philo_count = ft_atoi(argv[1]);
+	law->time_to_die = ft_atoi(argv[2]);
+	law->time_to_eat = ft_atoi(argv[3]);
+	law->time_to_sleep = ft_atoi(argv[4]);
+	if (argc == 6)
+		law->meals_required = ft_atoi(argv[5]);
+	else
+		law->meals_required = -1;
 	if (law->philo_count <= 0 || law->philo_count > PHILO_MAX_COUNT
 		|| law->time_to_die <= 0 || law->time_to_eat <= 0
 		|| law->time_to_sleep <= 0 || (argc == 6 && law->meals_required <= 0))
@@ -29,9 +59,9 @@ int init_law(t_law *law, int argc, char **argv)
 	return (0);
 }
 
-int init_guard(t_guard *guard, t_law *prison_law)
+int	init_guard(t_guard *guard, t_law *prison_law)
 {
-	int i;
+	int	i;
 
 	guard->someone_died = 0;
 	if (pthread_mutex_init(&guard->someone_died_mutex, NULL))
@@ -44,7 +74,7 @@ int init_guard(t_guard *guard, t_law *prison_law)
 	if (!guard->forks)
 		return (1);
 	i = 0;
-	while (i<guard->law->philo_count)
+	while (i < guard->law->philo_count)
 	{
 		if (pthread_mutex_init(&guard->forks[i], NULL))
 			return (1);
@@ -53,9 +83,9 @@ int init_guard(t_guard *guard, t_law *prison_law)
 	return (0);
 }
 
-int init_philos(t_philo **philos, t_law *law, t_guard *guard)
+int	init_philos(t_philo **philos, t_law *law, t_guard *guard)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	*philos = malloc(sizeof(t_philo) * law->philo_count);
@@ -77,7 +107,7 @@ int init_philos(t_philo **philos, t_law *law, t_guard *guard)
 	return (0);
 }
 
-int init_prison(t_prison *prison, int argc, char **argv)
+int	init_prison(t_prison *prison, int argc, char **argv)
 {
 	if (init_law(&prison->law, argc, argv))
 	{

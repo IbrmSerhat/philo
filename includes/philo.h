@@ -6,7 +6,7 @@
 /*   By: iaktas <iaktas@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 13:45:19 by iaktas            #+#    #+#             */
-/*   Updated: 2025/09/01 14:00:05 by iaktas           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:55:16 by iaktas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,12 @@ void	safe_sleep(int microseconds);
 
 // prison_sim.c
 int		start_simulation(t_prison *prison);
+
+// philosopher_utils.c
+int		single_fork(t_philo *philo);
+int		multi_fork(t_philo *philo);
+int		could_i_be_dead(t_philo *philo);
+void	a_questionable_sleep(t_philo *philo, int sleep_time);
 
 struct s_philo
 {
